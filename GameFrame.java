@@ -15,7 +15,7 @@ import javax.swing.JFrame;
 public class GameFrame extends JFrame{
 	public GameFrame(){
 		super("Framed");
-		this.setResizable(false);
+	//	this.setResizable(false);
 		this.add(new GamePanel());
 		this.pack();
 		this.addKeyListener(new Controller());

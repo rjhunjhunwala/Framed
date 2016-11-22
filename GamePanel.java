@@ -8,6 +8,7 @@ package framed;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Polygon;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import javax.swing.JPanel;
@@ -68,50 +69,13 @@ public class GamePanel extends JPanel {
 
 	@Override
 	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		g.setColor(Color.white);
-		g.drawString(Framed.p.x + "|" + Framed.p.y + "|" + Framed.p.z + "|" + Math.toDegrees(Framed.p.yXAngle), 0, 20);
-		Holder[][] zBuff = new Holder[X_SIZE / 4][Y_SIZE / 4];
-		for (int i = 0; i < X_SIZE / 4; i++) {
-			for (int j = 0; j < Y_SIZE / 4; j++) {
-				zBuff[i][j] = new Holder(1000, null);
-			}
-		}
-		for (Mesh m : meshes) {
-			ThreeDPoint p = m.vertices.get(0);
-			double dX = p.getX() - Framed.p.x;
-			double dY = p.getY() - Framed.p.y;
-			double dZ = p.getZ() - Framed.p.z;
-			if (Math.abs(dX) > 10 || Math.abs(dY) > 10 || Math.abs(dZ) > 10) {
-				continue;
-			}
-			double vAngle = Trig.atan(dY, dX);
-			double vAngle2 = Trig.atan(dZ, Math.sqrt(dX * dX + dY * dY));
-			//System.out.println(dX+"|"+dY+"|"+dZ);
-			double YXangleDiff = vAngle - Framed.p.yXAngle;
-			double ZXangleDiff = vAngle2 - Framed.p.zXAngle;
-			double xOff = Math.tan(YXangleDiff) * X_SIZE / 2;
-			double yOff = Math.tan(ZXangleDiff) * Y_SIZE / 2 / Math.cos(YXangleDiff);
-			double xL = (X_MID - xOff);
-			double yL = (Y_MID - yOff);
-			boolean behind = Math.abs(Math.PI - Math.abs(vAngle - Framed.p.yXAngle)) < Math.PI / 2;
-			if (Math.abs(Math.tan(YXangleDiff)) > 3 || behind || xL >= X_SIZE || yL >= Y_SIZE) {
-				continue;
-			}
-			double dist = Math.sqrt(dX * dX + dY * dY + dZ * dZ);
-			int buffY = (int) (yL / 4);
-			int buffX = (int) (xL / 4);
-			try {
-				if (zBuff[buffX][buffY].dist - dist > 0) {
-					zBuff[buffX][buffY] = new Holder(dist, m);
-				}
-			} catch (Exception ex) {
-			}
-		}
-		for (int i = 0; i < X_SIZE / 4; i++) {
-			for (int j = 0; j < Y_SIZE / 4; j++) {
 
-				Mesh m = zBuff[i][j].m;
+		super.paintComponent(g);
+		g.setColor(Color.green);
+		g.drawString(Framed.p.x + "|" + Framed.p.y + "|" + Framed.p.z + "|" + Math.toDegrees(Framed.p.yXAngle), 0, 20);
+
+
+for(Mesh m:meshes){
 				if (m != null) {
 
 					MyPoint oldPoint = null;
@@ -121,7 +85,7 @@ public class GamePanel extends JPanel {
 						double dX = p.getX() - Framed.p.x;
 						double dY = p.getY() - Framed.p.y;
 						double dZ = p.getZ() - Framed.p.z;
-						if (Math.abs(dX) > 20 || Math.abs(dY) > 20 || Math.abs(dZ) > 20) {
+						if (Math.abs(dX) > 10 || Math.abs(dY) > 10 || Math.abs(dZ) > 10) {
 							continue;
 						}
 						double vAngle = Trig.atan(dY, dX);
@@ -150,7 +114,7 @@ public class GamePanel extends JPanel {
 				}
 			}
 		}
-	}
+	
 
 	public static class Holder implements Comparable {
 

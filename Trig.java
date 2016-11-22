@@ -20,6 +20,9 @@ public class Trig {
 		if(A<0){
 			angle+=Math.PI;
 		}
+		if(O<0&&A>0){
+			angle+=2*Math.PI;
+		}
 		return angle;
 	}
 }

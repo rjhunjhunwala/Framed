@@ -12,13 +12,20 @@ import java.util.Stack;
  * @author rohan
  */
 public class Map {
+	public static final boolean threeD = true;
 		public static Stack<MyPoint> nodes = new Stack<>();
 static boolean[][] maze;
 	public static void makeMaze() {
+		if(threeD){
+		Maze.make4dMaze();
+		Maze.dispWholeMaze();
+		}else{
+			
 		maze = new boolean[65][65];
 		nodes.push(new MyPoint(1, 1));
 		while (!nodes.empty()) {
 			findNewNode();
+		}
 		}
 	}
 

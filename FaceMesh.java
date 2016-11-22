@@ -5,12 +5,22 @@
  */
 package framed;
 
+import java.awt.List;
+import java.util.LinkedList;
+
 /**
  *
  * @author rohan
  */
-public class Player {
-	public double yXAngle = 0;
-	public double zXAngle = 0;
-	public double x=GamePanel.SCALE*5,y=GamePanel.SCALE*5,z=Map.threeD?GamePanel.SCALE*5:0;
+public class FaceMesh {
+
+	LinkedList<Face> meshes = new LinkedList<>();
+
+	public FaceMesh(LinkedList<Face> list) {
+		for (Face m: list) {
+			meshes.add(m);
+		}
+	}
+
+
 }

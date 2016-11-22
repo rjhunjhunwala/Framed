@@ -72,7 +72,7 @@ public class Mesh {
 		return new Mesh(l);
 	}
 	
-	public static Mesh getPyramidMesh(int pX, int pY, int pZ){
+	public static Mesh getPyramidMesh(int pX, int pY, double pZ){
 			LinkedList<ThreeDPoint> l = new LinkedList<>();
 		l.add(new ThreeDPoint(pX, pY, pZ));
 				l.add(new ThreeDPoint(pX-1, pY-1, pZ-2));
