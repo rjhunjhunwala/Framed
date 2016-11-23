@@ -53,14 +53,14 @@ break;
 		Framed.p.yXAngle+=15*Math.PI/8;
 		Framed.p.yXAngle%=2*Math.PI;
 break;
-	case KeyEvent.VK_Z:
-		Framed.p.zXAngle+=15*Math.PI/8;
-		Framed.p.zXAngle%=2*Math.PI;
-	break;		
-	case KeyEvent.VK_C:
-		Framed.p.zXAngle+=1*Math.PI/8;
-		Framed.p.zXAngle%=2*Math.PI;
-	break;
+//	case KeyEvent.VK_Z:
+//		Framed.p.zXAngle+=15*Math.PI/8;
+//		Framed.p.zXAngle%=2*Math.PI;
+//	break;		
+//	case KeyEvent.VK_C:
+//		Framed.p.zXAngle+=1*Math.PI/8;
+//		Framed.p.zXAngle%=2*Math.PI;
+//	break;
 	case KeyEvent.VK_SPACE:
 z+=.3;
 	break;
