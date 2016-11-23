@@ -26,7 +26,7 @@ public class Maze {
 	 * automatically renders positions off the side of the maze as walls
 	 * recommended size 11
 	 */
-	public static final int size=11;
+	public static final int size=15;
 	//if the user wants gremlins this is true
 	/**
 	 * If gremlins are enabled the recommended setting is yes
@@ -247,41 +247,6 @@ public class Maze {
 		}
 	}
 
-	/**
-	 * prints to console the area around the player "P"
-	 *
-	 * @param renderDistance render distance around it
-	 */
-	public static void dispPosition(int renderDistance) {
-		for (int z = position[1] - renderDistance;
-										z <= position[1] + renderDistance; z++) {
-			for (int y = position[2] - renderDistance;
-											y <= position[2] + renderDistance; y++) {
-				for (int x = position[3] - renderDistance;
-												x <= position[3] + renderDistance; x++) {
-					String symbol = "[!]"; //its a gremlin unless its one of the others
-					// a gremlin has code 127
-					try {
-						if (maze[0][z][y][x] == 1) {
-							symbol = "[ ]";//pasage
-						} else if (maze[0][z][y][x] == 2) {
-							symbol = "[P]";//player
-						} else if (maze[0][z][y][x] == 0) {
-							symbol = "[W]";//wall
-						} else if (maze[0][z][y][x] == 3) {
-							symbol = "[F]";//Finish line
-						}
-					} catch (Exception e) {
-// Render walls all around the maze
-						symbol = "[W]";
-					}
-					System.out.print(symbol);
-				}
-				System.out.println();
-			}
-			System.out.println("\n");
-		}
-	}
 
 	/**
 	 * displays one layer of the maze
@@ -291,27 +256,20 @@ public class Maze {
 	public static void dispMaze(byte[][] inMaze) {
 		for (byte[] a : inMaze) {
 			for (byte b : a) {
-				if (b == 0) {
-					System.out.print("[W]");
-				} else if (b == 1) {
-					System.out.print("[ ]");
-				} else if (b == 2) {
-					System.out.print("[☺]");
-				} else {
-					System.out.print("[!]");
-				}
+System.out.print("["+(b==0?'W':' ')+"]");
 			}
 			System.out.println();
 		}
 	}
+	
 
 	/**
-	 * makes the little 3 by 3 by 3 hole in the middle of the maze Almost like the
+	 * makes the little hole in the middle of the maze Almost like the
 	 * glade in maze runner By glade radius it means the farthest distance away
-	 * from the center cube the glade extends rounded down to the nearest integer
+	 * from the center cube. Diagonal squares count as one. 
 	 */
 	public static void makeGlade() {
-		int d = 1;//glade "radius"
+		int d = 2;//glade "radius"
 		for (int z = size / 2 - d; z <= size / 2 + d; z++) {
 			for (int y = size / 2 - d; y <= size / 2 + d; y++) {
 				for (int x = size / 2 - d; x <= size / 2 + d; x++) {

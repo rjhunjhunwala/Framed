@@ -13,7 +13,7 @@ import java.awt.event.KeyListener;
  * @author rohan
  */
 public class Controller implements KeyListener{
-public static final double SPEED = .125;
+public static final double SPEED = .25;
 	@Override
 	public void keyTyped(KeyEvent e) {
 //nil
@@ -68,7 +68,7 @@ z+=.3;
 z-=.3;
 	
 }
-if(Maze.maze[0][(int)x/GamePanel.SCALE][(int)y/GamePanel.SCALE][(int)z/GamePanel.SCALE]==1){
+if(Map.threeD?Maze.maze[0][(int)x/(GamePanel.SCALE)][(int)(y/GamePanel.SCALE)][(int)(z/GamePanel.SCALE)]==1:(int) z!=0||Map.maze[(int) (x/GamePanel.SCALE)][(int) (y/GamePanel.SCALE)]){
 	Framed.p.z = z;
 									Framed.p.x= x;
 									Framed.p.y = y;

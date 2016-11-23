@@ -21,6 +21,15 @@ public class FaceMesh {
 			meshes.add(m);
 		}
 	}
-
+public static FaceMesh getCube(double x,double y,double z){
+LinkedList<Face> faces = new LinkedList<>();
+faces.add(Face.getSquareFace(x, y, z, 0));
+faces.add(Face.getSquareFace(x, y, z, 1));
+faces.add(Face.getSquareFace(x, y, z, 2));
+faces.add(Face.getSquareFace(x, y, z+1, 0));
+faces.add(Face.getSquareFace(x, y+1, z, 1));
+faces.add(Face.getSquareFace(x+1, y, z, 2));
+return new FaceMesh(faces);
+}
 
 }
