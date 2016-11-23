@@ -12,7 +12,7 @@ import java.util.Stack;
  * @author rohan
  */
 public class Map {
-	public static final boolean threeD = true;
+	public static final boolean threeD =true;
 		public static Stack<MyPoint> nodes = new Stack<>();
 static boolean[][] maze;
 	public static void makeMaze() {

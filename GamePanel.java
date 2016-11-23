@@ -84,6 +84,7 @@ for(FaceMesh m:meshes){
 	public Dimension getPreferredSize() {
 		return new Dimension(X_SIZE, Y_SIZE);
 	}
+	public static final int DARK = 15;
 public static final boolean EDGES = false;
 	@Override
 	public void paintComponent(Graphics g) {
@@ -123,7 +124,7 @@ double dist =0.0;
 //||((Math.cos(Framed.p.yXAngle)>0!=Math.cos(vAngle)>0)&&(Math.sin(Framed.p.yXAngle)<0!=Math.sin(vAngle)<0))
 						boolean behind = Math.abs(Math.PI - Math.abs(vAngle - Framed.p.yXAngle)) < Math.PI / 2;
 //behind = (Math.sin(Framed.p.yXAngle)<0!=Math.sin(vAngle)<0)&&(Math.cos(vAngle)<0!=Math.cos(Framed.p.yXAngle)<0)&&(Math.sin(Framed.p.zXAngle)<0!=Math.sin(vAngle2)<0);	
-						if (Math.abs(Math.tan(YXangleDiff)) > 3 || behind) {
+						if (Math.abs(Math.tan(YXangleDiff)) > 10 || behind) {
 							continue boxes;
 						}
 
@@ -132,10 +133,10 @@ yPoints[i] = (int) newPoint.getY();
 i++;
 
 						}
-				int r=(int) (f.r-f.dist()*15);
-			 int gr =(int) (f.g-f.dist()*15);
+				int r=(int) (f.r-f.dist()*DARK);
+			 int gr =(int) (f.g-f.dist()*DARK);
 				
-			 int b =(int) (f.b-f.dist()*15);
+			 int b =(int) (f.b-f.dist()*DARK);
 						g.setColor(new Color(r>0?r:0,gr>0?gr:0,b>0?b:0));
 		
 					g.fillPolygon(xPoints,yPoints,4);
@@ -146,50 +147,50 @@ i++;
 		if(EDGES){
 
 		boxes:
-for(FaceMesh m:meshes){
+for(Face f:faces){
 
-
-					for(int z =0;z<6;z++){
-int[] xPoints = new int[4];
-int[] yPoints = new int[4];
+int[] xPoints = new int[f.vertices.length];
+int[] yPoints = new int[f.vertices.length];
 int i =0;
 double dist =0.0;
 						MyPoint newPoint = null;
-						for (ThreeDPoint p : m.meshes.get(z).vertices) {
+						for (ThreeDPoint p : f.vertices) {
 
 						double dX = p.getX() - Framed.p.x;
 						double dY = p.getY() - Framed.p.y;
 						double dZ = p.getZ() - Framed.p.z;
-						if (Math.abs(dX) > 5 || Math.abs(dY) > 5 || Math.abs(dZ) > 5) {
-							continue boxes;
-						}
+//						if (Math.abs(dX) > 10 || Math.abs(dY) > 10 || Math.abs(dZ) > 10) {
+//							continue boxes;
+//						}
 						double vAngle = Trig.atan(dY, dX);
 						double vAngle2 = Trig.atan(dZ, Math.sqrt(dX * dX + dY * dY));
 						//System.out.println(dX+"|"+dY+"|"+dZ);
 						double YXangleDiff = vAngle - Framed.p.yXAngle;
 						double ZXangleDiff = vAngle2 - Framed.p.zXAngle;
 						double xOff = Math.tan(YXangleDiff) * X_SIZE / 2;
-						double yOff = Math.tan(ZXangleDiff) * Y_SIZE / 2 / Math.cos(YXangleDiff);
+						double yOff = Math.tan(ZXangleDiff) * Y_SIZE / 2 / Math.cos(YXangleDiff)/Math.cos(Framed.p.zXAngle);
 						double xL = (X_MID - xOff);
 						double yL = (Y_MID - yOff);
 						newPoint = new MyPoint(xL, yL);
-						xPoints[i] =(int) newPoint.getX();
-						yPoints[i] = (int) newPoint.getY();
-						i++;
-						dist = Math.sqrt(dX*dX+dY*dY+dZ*dZ);
 //||((Math.cos(Framed.p.yXAngle)>0!=Math.cos(vAngle)>0)&&(Math.sin(Framed.p.yXAngle)<0!=Math.sin(vAngle)<0))
 						boolean behind = Math.abs(Math.PI - Math.abs(vAngle - Framed.p.yXAngle)) < Math.PI / 2;
 //behind = (Math.sin(Framed.p.yXAngle)<0!=Math.sin(vAngle)<0)&&(Math.cos(vAngle)<0!=Math.cos(Framed.p.yXAngle)<0)&&(Math.sin(Framed.p.zXAngle)<0!=Math.sin(vAngle2)<0);	
-						if (Math.abs(Math.tan(YXangleDiff)) > 3 || behind) {
+						if (Math.abs(Math.tan(YXangleDiff)) > 10 || behind) {
 							continue boxes;
 						}
+
+xPoints[i] = (int) newPoint.getX();
+yPoints[i] = (int) newPoint.getY();					
+i++;
+
+						}
+				
+			 int b =(int) (255-f.dist()*DARK);
+						g.setColor(new Color(0,0,b>0?b:0));
 		
-
-					}
-											g.setColor(new Color(0, 0,(int) (255-dist*4)));
-						g.drawPolygon(xPoints,yPoints,xPoints.length);
-
-				}
+					g.drawPolygon(xPoints,yPoints,4);
+				
+				
 
 			}
 		}

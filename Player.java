@@ -14,6 +14,6 @@ import static framed.GamePanel.SCALE;
 public class Player {
 	public double yXAngle = 0;
 	public double zXAngle = 0;
-//public double x=GamePanel.SCALE+.01,y=GamePanel.SCALE+.01,z=Map.threeD?GamePanel.SCALE+.01:0.01;
-public double x =Maze.size*SCALE-3,y= Maze.size*SCALE-3,z=Maze.size*SCALE-3;
+public double x=7*GamePanel.SCALE+.01,y=7*GamePanel.SCALE+.01,z=Map.threeD?7*GamePanel.SCALE+.01:0.01;
+//public double x =Maze.size*SCALE-3,y= Maze.size*SCALE-3,z=Maze.size*SCALE-3;
 }
