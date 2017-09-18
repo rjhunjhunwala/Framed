@@ -7,6 +7,7 @@ package framed;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Arrays;
 
 /**
  *
@@ -48,25 +49,41 @@ y+=Math.sin(Framed.p.yXAngle-Math.PI/2)*SPEED;
 	case KeyEvent.VK_Q:
 			Framed.p.yXAngle+=Math.PI/8;
 		Framed.p.yXAngle%=2*Math.PI;
-break;
+playerVectorFix();
+		break;
 	case KeyEvent.VK_E:
+	
 		Framed.p.yXAngle+=15*Math.PI/8;
 		Framed.p.yXAngle%=2*Math.PI;
-break;
-//	case KeyEvent.VK_Z:
-//		Framed.p.zXAngle+=15*Math.PI/8;
-//		Framed.p.zXAngle%=2*Math.PI;
-//	break;		
-//	case KeyEvent.VK_C:
-//		Framed.p.zXAngle+=1*Math.PI/8;
-//		Framed.p.zXAngle%=2*Math.PI;
-//	break;
+playerVectorFix();
+		break;
+	case KeyEvent.VK_Z:
+		
+		Framed.p.zXAngle+=47*Math.PI/24;
+		Framed.p.zXAngle%=2*Math.PI;
+	playerVectorFix();
+		break;		
+	case KeyEvent.VK_C:
+		
+		Framed.p.zXAngle+=1*Math.PI/24;
+		Framed.p.zXAngle%=2*Math.PI;
+	playerVectorFix();
+		break;
 	case KeyEvent.VK_SPACE:
 z+=.3;
 	break;
 	case KeyEvent.VK_X:
 z-=.3;
+	break;
+	case KeyEvent.VK_R:
+		GamePanel.renderDist++;
+		GamePanel.DARK = 180/GamePanel.SCALE/GamePanel.renderDist;
 	
+		break;
+	case KeyEvent.VK_V:
+GamePanel.renderDist--;
+		GamePanel.DARK = 180/GamePanel.SCALE/GamePanel.renderDist;		
+		break;
 }
 if(Map.threeD?Maze.maze[0][(int)x/(GamePanel.SCALE)][(int)(y/GamePanel.SCALE)][(int)(z/GamePanel.SCALE)]==1:(int) z!=0||Map.maze[(int) (x/GamePanel.SCALE)][(int) (y/GamePanel.SCALE)]){
 	Framed.p.z = z;
@@ -81,5 +98,10 @@ if(Map.threeD?Maze.maze[0][(int)x/(GamePanel.SCALE)][(int)(y/GamePanel.SCALE)][(
 	}
 	
 	
+	public static void playerVectorFix(){
+		System.out.println(Framed.p.yXAngle+"|"+Framed.p.yXAngle);
 	
+	 Framed.p.viewVector = new double[]{Math.cos(Framed.p.zXAngle)*Math.cos(Framed.p.yXAngle),Math.cos(Framed.p.zXAngle)*Math.sin(Framed.p.yXAngle),Math.sin(Framed.p.zXAngle)};
+	System.out.println(Arrays.toString(Framed.p.viewVector));
+	}
 }

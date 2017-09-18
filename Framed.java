@@ -5,6 +5,8 @@
  */
 package framed;
 
+import java.util.Arrays;
+
 /**
  *
  * @author rohan
@@ -16,6 +18,10 @@ static GameFrame mainFrame = new GameFrame();
 	 * @param args the command line arguments
 	 */
 	public static void main(String[] args) {
+		Map.genMap();
+//for(int[] i:Map.heightMap){
+	//System.out.println(Arrays.toString(i));
+//}
 for(;;){
 	mainFrame.repaint();
 }

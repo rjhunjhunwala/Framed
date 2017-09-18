@@ -26,7 +26,7 @@ public class Maze {
 	 * automatically renders positions off the side of the maze as walls
 	 * recommended size 11
 	 */
-	public static final int size=15;
+	public static final int size=11;
 	//if the user wants gremlins this is true
 	/**
 	 * If gremlins are enabled the recommended setting is yes
@@ -276,8 +276,7 @@ System.out.print("["+(b==0?'W':' ')+"]");
 					try {
 						maze[0][z][y][x] = 1;
 					} catch (Exception e) {
-						//what?? this shouldnt happen unless
-						//the user doesnt know what an number 9-25 is
+
 
 					}
 				}

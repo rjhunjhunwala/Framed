@@ -14,6 +14,18 @@ import static framed.GamePanel.SCALE;
 public class Player {
 	public double yXAngle = 0;
 	public double zXAngle = 0;
-public double x=7*GamePanel.SCALE+.01,y=7*GamePanel.SCALE+.01,z=Map.threeD?7*GamePanel.SCALE+.01:0.01;
-//public double x =Maze.size*SCALE-3,y= Maze.size*SCALE-3,z=Maze.size*SCALE-3;
+	public double[] viewVector = {1,0,0};
+public double x=Maze.size/2*GamePanel.SCALE+.01,y=Maze.size/2*GamePanel.SCALE+.01,z=Map.threeD?Maze.size/2*GamePanel.SCALE+.01:0.01;
+
+{
+	boolean kludge = !Map.threeD;
+	//kludge the player where I would like
+	if(!Map.threeD&&kludge){
+	x= -4;
+	y = -4;
+	z = -4;
+	yXAngle = Math.PI/4;
+	viewVector = new double[]{.707,.707,0};
+}
+}
 }

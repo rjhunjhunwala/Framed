@@ -12,21 +12,48 @@ import java.util.Stack;
  * @author rohan
  */
 public class Map {
-	public static final boolean threeD =true;
-		public static Stack<MyPoint> nodes = new Stack<>();
-static boolean[][] maze;
+
+	public static final boolean threeD = false;
+	public static Stack<MyPoint> nodes = new Stack<>();
+	static boolean[][] maze;
+
 	public static void makeMaze() {
-		if(threeD){
-		Maze.make4dMaze();
-		Maze.dispWholeMaze();
-		}else{
-			
-		maze = new boolean[65][65];
-		nodes.push(new MyPoint(1, 1));
-		while (!nodes.empty()) {
-			findNewNode();
+		if (threeD) {
+			Maze.make4dMaze();
+			Maze.dispWholeMaze();
+		} else {
+
+			maze = new boolean[65][65];
+			nodes.push(new MyPoint(1, 1));
+			while (!nodes.empty()) {
+				findNewNode();
+			}
 		}
+	}
+	static int[][] heightMap = new int[10][10];
+
+	public static void genMap() {
+		for (int i = 0; i < heightMap.length; i++) {
+			for (int j = 0; j < heightMap[i].length; j++) {
+				heightMap[i][j] = 10;
+			}
 		}
+		makePerlinNoise(0,9,0,9,64);
+	}
+
+	public static void makePerlinNoise(int lowX, int maxX, int lowY, int maxY, int distortion) {
+
+		int midX = (lowX + maxX) / 2;
+		int midY = (lowY + maxY) / 2;
+if(midX==lowX&&midY==lowY){
+	return;
+}
+		heightMap[midX][midY] = (int) ((Math.random() * distortion + (heightMap[lowX][lowY] + heightMap[lowX][maxY] + heightMap[maxX][lowY] + heightMap[maxX][maxY]) / 4));
+		distortion /= 2;
+		makePerlinNoise(lowX, midX, lowY, midY, distortion);
+	makePerlinNoise(midX, maxX, lowY, midY, distortion);
+		makePerlinNoise(lowX, midX, midY, maxY, distortion);
+		makePerlinNoise(midX, maxX, midY, maxY, distortion);
 	}
 
 	public static void findNewNode() {
