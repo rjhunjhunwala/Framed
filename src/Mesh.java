@@ -23,18 +23,18 @@ public class Mesh {
 	}
 
 	public static Mesh getCubeMesh(double x, double y, double z) {
-			LinkedList<ThreeDPoint> l = new LinkedList<>();
+		LinkedList<ThreeDPoint> l = new LinkedList<>();
 		l.add(new ThreeDPoint(x, y, z));
 		l.add(new ThreeDPoint(x, y + 1, z));
 		l.add(new ThreeDPoint(x + 1, y + 1, z));
 		l.add(new ThreeDPoint(x + 1, y, z));
 		l.add(new ThreeDPoint(x, y, z));
 		l.add(new ThreeDPoint(x, y, z - 1));
-		l.add(new ThreeDPoint(x+1, y, z - 1));
-				l.add(new ThreeDPoint(x+1, y+1, z - 1));
-						l.add(new ThreeDPoint(x, y+1, z - 1));
-								l.add(new ThreeDPoint(x, y, z - 1));
-						
+		l.add(new ThreeDPoint(x + 1, y, z - 1));
+		l.add(new ThreeDPoint(x + 1, y + 1, z - 1));
+		l.add(new ThreeDPoint(x, y + 1, z - 1));
+		l.add(new ThreeDPoint(x, y, z - 1));
+
 		l.add(new ThreeDPoint(x + 1, y, z));
 		l.add(new ThreeDPoint(x + 1, y, z - 1));
 		l.add(new ThreeDPoint(x + 1, y + 1, z));
@@ -48,41 +48,41 @@ public class Mesh {
 		//System.out.println(l);
 		return new Mesh(l);
 	}
-	public static Mesh getSimpleCubeMesh(double x, double y, double z) {
-			LinkedList<ThreeDPoint> l = new LinkedList<>();
-		l.add(new ThreeDPoint(x, y, z));
-		l.add(new ThreeDPoint(x, y + 1, z));
-		l.add(new ThreeDPoint(x + 1, y + 1, z));
-		l.add(new ThreeDPoint(x + 1, y, z));
-		l.add(new ThreeDPoint(x, y, z));
-	l.add(new ThreeDPoint(x, y, z+1));
-		l.add(new ThreeDPoint(x, y + 1, z+1));
-		l.add(new ThreeDPoint(x, y + 1, z));
-	l.add(new ThreeDPoint(x, y + 1, z+1));
-		l.add(new ThreeDPoint(x + 1, y + 1, z+1));
-		l.add(new ThreeDPoint(x + 1, y + 1, z));
-		l.add(new ThreeDPoint(x + 1, y + 1, z+1));
-		l.add(new ThreeDPoint(x + 1, y, z+1));
-		l.add(new ThreeDPoint(x + 1, y, z));
-				l.add(new ThreeDPoint(x + 1, y, z+1));
 
+	public static Mesh getSimpleCubeMesh(double x, double y, double z) {
+		LinkedList<ThreeDPoint> l = new LinkedList<>();
+		l.add(new ThreeDPoint(x, y, z));
+		l.add(new ThreeDPoint(x, y + 1, z));
+		l.add(new ThreeDPoint(x + 1, y + 1, z));
+		l.add(new ThreeDPoint(x + 1, y, z));
+		l.add(new ThreeDPoint(x, y, z));
+		l.add(new ThreeDPoint(x, y, z + 1));
+		l.add(new ThreeDPoint(x, y + 1, z + 1));
+		l.add(new ThreeDPoint(x, y + 1, z));
+		l.add(new ThreeDPoint(x, y + 1, z + 1));
+		l.add(new ThreeDPoint(x + 1, y + 1, z + 1));
+		l.add(new ThreeDPoint(x + 1, y + 1, z));
+		l.add(new ThreeDPoint(x + 1, y + 1, z + 1));
+		l.add(new ThreeDPoint(x + 1, y, z + 1));
+		l.add(new ThreeDPoint(x + 1, y, z));
+		l.add(new ThreeDPoint(x + 1, y, z + 1));
 
 		//create a cube with cross bars		
 		//System.out.println(l);
 		return new Mesh(l);
 	}
-	
-	public static Mesh getPyramidMesh(int pX, int pY, double pZ){
-			LinkedList<ThreeDPoint> l = new LinkedList<>();
+
+	public static Mesh getPyramidMesh(int pX, int pY, double pZ) {
+		LinkedList<ThreeDPoint> l = new LinkedList<>();
 		l.add(new ThreeDPoint(pX, pY, pZ));
-				l.add(new ThreeDPoint(pX-1, pY-1, pZ-2));
+		l.add(new ThreeDPoint(pX - 1, pY - 1, pZ - 2));
 		//l.add(new ThreeDPoint(pX-1, pY+1, pZ-2));
 		//l.add(new ThreeDPoint(pX+1, pY+1, pZ-2));
-					//l.add(new ThreeDPoint(pX+1, pY-1, pZ-2));
+		//l.add(new ThreeDPoint(pX+1, pY-1, pZ-2));
 		return new Mesh(l);
 	}
 
-	public static Mesh getPyramidMesh(){
+	public static Mesh getPyramidMesh() {
 		return null;
 	}
 }

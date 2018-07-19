@@ -22,18 +22,9 @@ public class Maze {
 	public static int window;
 	/**
 	 * if the size is even the maze will not be nicely contained by walls Also the
-	 * "glade" in the middle will be off center. Not a big deal because the program
-	 * automatically renders positions off the side of the maze as walls
-	 * recommended size 11
+	 * "glade" in the middle will be off center. N
 	 */
-	public static final int size=11;
-	//if the user wants gremlins this is true
-	/**
-	 * If gremlins are enabled the recommended setting is yes
-	 */
-	
-
-	
+	public static final int size=19;
 	//these are the dimensions
 	/**
 	 * The size of the z dimension
@@ -55,7 +46,7 @@ public class Maze {
 	 */
 	public static byte[] position = {0, 1, 1, 1};
 	/**
-	 * 4d maze
+	 * 3d maze
 	 */
 	public static byte[][][][] maze = new byte[1][zSize][ySize][xSize];
 	/**
@@ -179,45 +170,6 @@ public class Maze {
 		byte[] cloned = node.clone();
 		nodes.add(cloned);
 
-	}
-
-	/**
-	 * makes a user move
-	 *
-	 * @param move is a character w a s d r to go up v to go down
-	 */
-	public static void makeMove(char move) {
-		byte[] tempPosition = position.clone();
-		try {
-			maze[0][position[1]][position[2]][position[3]] = 1;
-			if (move == 'w') {
-				position[2] -= 1;
-			} else if (move == 's') {
-				position[2] += 1;
-			} else if (move == 'a') {
-				position[3] -= 1;
-			} else if (move == 'd') {
-				position[3] += 1;
-			} else if (move == 'r') {
-				position[1] -= 1;
-			} else if (move == 'v') {
-				position[1] += 1;
-			} else {
-			}
-			if (maze[0][position[1]][position[2]][position[3]] != 0) {
-				// the square is empty he is good to go
-				maze[0][position[1]][position[2]][position[3]] = 2;
-			} else {
-				// if the square is occupied
-				maze[0][tempPosition[1]][tempPosition[2]][tempPosition[3]] = 2;
-				position = tempPosition.clone();
-			}
-
-		} catch (Exception e) {
-			//he tried to move to a nonexistent or occupied square
-			maze[0][tempPosition[1]][tempPosition[2]][tempPosition[3]] = 2;
-			position = tempPosition.clone();
-		}
 	}
 
 

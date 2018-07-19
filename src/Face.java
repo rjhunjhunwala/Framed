@@ -6,6 +6,7 @@
 package framed;
 
 import java.awt.Color;
+import static java.awt.Color.green;
 import java.awt.List;
 import java.util.LinkedList;
 
@@ -31,6 +32,9 @@ int b = 0;
 		this.g = g;
 		this.b = b;
 	}
+	public static Face getSquareFace(double x, double y, double z, int orientation){
+	return Face.getSquareFace( x, y,  z, orientation,Color.green);
+}
 	/**
 		* Gets a square face originate at a given coordinate
 		* @param x
@@ -39,7 +43,7 @@ int b = 0;
 		* @param orientation 0 = positive x, positive y, 1 = positive x, positive z, 2 = positive y,z
 		* @return 
 		*/
-	public static Face getSquareFace(double x,double y,double z, int orientation){
+	public static Face getSquareFace(double x,double y,double z, int orientation, Color inColor){
 		LinkedList<ThreeDPoint> list = new LinkedList<>();
 		list.add(new ThreeDPoint(x,y,z));
 switch(orientation){
@@ -72,7 +76,7 @@ switch(orientation){
 	case 2:
 					list.add(new ThreeDPoint(x,y,z+1));
 }
-		return new Face(list);
+		return new Face(list,inColor.getRed(),inColor.getGreen(),inColor.getBlue());
 	}
 
 	@Override
@@ -82,9 +86,20 @@ switch(orientation){
 
 		}
 public double dist(){
-	double dX = this.vertices[0].getX()-Framed.p.x;
-	double dY = this.vertices[0].getY()-Framed.p.y;
-		double dZ = this.vertices[0].getZ()-Framed.p.z;
+	double averageX = 0;
+	double averageY = 0;
+	double averageZ = 0;
+	for(ThreeDPoint p:vertices){
+		averageX+=p.x;
+		averageY+=p.y;
+		averageZ+=p.z;
+	}
+	averageX/=vertices.length;
+	averageY/=vertices.length;
+	averageZ/=vertices.length;
+	double dX = averageX-Framed.p.x;
+	double dY = averageY-Framed.p.y;
+		double dZ = averageZ-Framed.p.z;
 	return Math.sqrt(dX*dX+dY*dY+dZ*dZ);
 }
 

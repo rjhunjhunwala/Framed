@@ -24,9 +24,9 @@ public double x=Maze.size/2*GamePanel.SCALE+.01,y=Maze.size/2*GamePanel.SCALE+.0
 	x= -4;
 	y = -4;
 	z = -4;
-	yXAngle = Math.PI/4+Math.PI/48;
-	zXAngle = Math.PI/96;
-	viewVector = new double[]{.707,.707,0};
+	//yXAngle = Math.PI/4+Math.PI/48;
+	//zXAngle = Math.PI/96;
+	//viewVector = new double[]{.707,.707,0};
 Controller.playerVectorFix();
 	}
 }
