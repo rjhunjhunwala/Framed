@@ -20,13 +20,20 @@ ThreeDPoint[] vertices;
 int r = 0;
 int g = 255;
 int b = 0;
-	public Face(LinkedList<ThreeDPoint> list) {
+	
+public Face(LinkedList<ThreeDPoint> list) {
 		vertices = new ThreeDPoint[list.size()];
 		for(int i = 0;i<vertices.length;i++){
 			vertices[i] = list.get(i);
 		}
 	}
-	public Face(LinkedList<ThreeDPoint> list, int r, int g, int b){
+public Face(double...inputs){
+	vertices = new ThreeDPoint[inputs.length/3];
+	for(int i = 0;i<inputs.length;i+=3){
+		vertices[i/3] = new ThreeDPoint(inputs[i],inputs[i+1],inputs[i+2]);
+	}
+}
+public Face(LinkedList<ThreeDPoint> list, int r, int g, int b){
 		this(list);
 		this.r = r;
 		this.g = g;
@@ -41,6 +48,7 @@ int b = 0;
 		* @param y
 		* @param z
 		* @param orientation 0 = positive x, positive y, 1 = positive x, positive z, 2 = positive y,z
+	 * @param inColor
 		* @return 
 		*/
 	public static Face getSquareFace(double x,double y,double z, int orientation, Color inColor){

@@ -26,8 +26,9 @@ public class Controller implements KeyListener {
 	public void keyPressed(KeyEvent e) {
 		double x = Framed.p.x, y = Framed.p.y, z = Framed.p.z;
 		double[] pV = Framed.p.viewVector;
-		double[] pLV = new double[]{Math.cos(Framed.p.yXAngle+Math.PI/2),Math.sin(Framed.p.yXAngle+Math.PI/2),0};
-		double[] pUP = new double[]{Math.cos(Framed.p.zXAngle+Math.PI/2) * Math.cos(Framed.p.yXAngle), Math.cos(Framed.p.zXAngle+Math.PI/2) * Math.sin(Framed.p.yXAngle), Math.sin(Framed.p.zXAngle+Math.PI/2)};
+		double[] pLV = Framed.p.leftVector;
+		double[] pUP = Framed.p.upVector;
+		boolean correct = false;
 		switch (e.getKeyCode()) {
 			case KeyEvent.VK_UP:
 			case KeyEvent.VK_W:
@@ -55,37 +56,42 @@ public class Controller implements KeyListener {
 				break;
 
 			case KeyEvent.VK_Q:
-				Framed.p.yXAngle += Math.PI / 8;
-				Framed.p.yXAngle %= 2 * Math.PI;
-				playerVectorFix();
+				Framed.p.viewVector = Trig.rotate(pV, pUP, Math.PI/8);
+				Framed.p.leftVector = Trig.rotate(pLV, pUP, Math.PI/8);
 				break;
 			case KeyEvent.VK_E:
-				Framed.p.yXAngle += 2 * Math.PI - Math.PI / 8;
-				Framed.p.yXAngle %= 2 * Math.PI;
-				playerVectorFix();
+   				Framed.p.viewVector = Trig.rotate(pV, pUP, -Math.PI/8);
+				Framed.p.leftVector = Trig.rotate(pLV, pUP, -Math.PI/8);
+
 				break;
 			case KeyEvent.VK_Z:
-
-				Framed.p.zXAngle += 15 * Math.PI / 8;
-				Framed.p.zXAngle %= 2 * Math.PI;
-				playerVectorFix();
+				   				Framed.p.viewVector = Trig.rotate(pV, pLV, -Math.PI/8);
+				Framed.p.upVector = Trig.rotate(pUP, pLV, -Math.PI/8);
 				break;
 			case KeyEvent.VK_C:
+   				Framed.p.viewVector = Trig.rotate(pV, pLV, Math.PI/8);
+				Framed.p.upVector = Trig.rotate(pUP, pLV, Math.PI/8);
 
-				Framed.p.zXAngle += 1 * Math.PI / 8;
-				Framed.p.zXAngle %= 2 * Math.PI;
-				playerVectorFix();
+				break;
+			case KeyEvent.VK_T:
+   				Framed.p.upVector = Trig.rotate(pUP, pV, -Math.PI/8);
+				Framed.p.leftVector = Trig.rotate(pLV, pV, -Math.PI/8);
+				break;
+			case KeyEvent.VK_B:
+		   				Framed.p.upVector = Trig.rotate(pUP, pV, Math.PI/8);
+				Framed.p.leftVector = Trig.rotate(pLV, pV, Math.PI/8);
 				break;
 			case KeyEvent.VK_SPACE:
-    				x += pUP[0] * SPEED;
+				x += pUP[0] * SPEED;
 				y += pUP[1] * SPEED;
 				z += pUP[2] * SPEED;
 				break;
 			case KeyEvent.VK_X:
-    				x -= pUP[0] * SPEED;
+				x -= pUP[0] * SPEED;
 				y -= pUP[1] * SPEED;
 				z -= pUP[2] * SPEED;
 				break;
+
 			case KeyEvent.VK_R:
 				GamePanel.renderDist++;
 				GamePanel.DARK = 180 / GamePanel.SCALE / GamePanel.renderDist;
@@ -96,7 +102,8 @@ public class Controller implements KeyListener {
 				GamePanel.DARK = 180 / GamePanel.SCALE / GamePanel.renderDist;
 				break;
 		}
-		if (Map.threeD ? Maze.maze[0][(int) x / (GamePanel.SCALE)][(int) (y / GamePanel.SCALE)][(int) (z / GamePanel.SCALE)] == 1 : (int) z != 0 || Map.maze[(int) (x / GamePanel.SCALE)][(int) (y / GamePanel.SCALE)]) {
+
+		if (Map.surface||(Map.threeD ? Maze.maze[0][(int) x / (GamePanel.SCALE)][(int) (y / GamePanel.SCALE)][(int) (z / GamePanel.SCALE)] == 1 : (int) z != 0 || Map.maze[(int) (x / GamePanel.SCALE)][(int) (y / GamePanel.SCALE)])) {
 			Framed.p.z = z;
 			Framed.p.x = x;
 			Framed.p.y = y;
@@ -106,11 +113,5 @@ public class Controller implements KeyListener {
 	@Override
 	public void keyReleased(KeyEvent e) {
 //nil
-	}
-
-	public static void playerVectorFix() {
-
-		Framed.p.viewVector = new double[]{Math.cos(Framed.p.zXAngle) * Math.cos(Framed.p.yXAngle), Math.cos(Framed.p.zXAngle) * Math.sin(Framed.p.yXAngle), Math.sin(Framed.p.zXAngle)};
-//	System.out.println(Arrays.toString(Framed.p.viewVector));
 	}
 }

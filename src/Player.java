@@ -12,9 +12,17 @@ import static framed.GamePanel.SCALE;
  * @author rohan
  */
 public class Player {
-	public double yXAngle = 0;
-	public double zXAngle = 0;
+	//yaw
+	public double yaw = 0;
+	//pitch
+	public double pitch = 0;
+	//roll
+	public double roll = 0;
 	public double[] viewVector = {1,0,0};
+	//our system is right handed.
+	public double[] leftVector = {0,1,0};
+ //makes sense
+	public double[] upVector = {0,0,1};
 public double x=Maze.size/2*GamePanel.SCALE+.01,y=Maze.size/2*GamePanel.SCALE+.01,z=Map.threeD?Maze.size/2*GamePanel.SCALE+.01:0.01;
 
 {
@@ -27,7 +35,7 @@ public double x=Maze.size/2*GamePanel.SCALE+.01,y=Maze.size/2*GamePanel.SCALE+.0
 	//yXAngle = Math.PI/4+Math.PI/48;
 	//zXAngle = Math.PI/96;
 	//viewVector = new double[]{.707,.707,0};
-Controller.playerVectorFix();
+//Controller.playerVectorFix();
 	}
 }
 }

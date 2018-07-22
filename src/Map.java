@@ -5,6 +5,7 @@
  */
 package framed;
 
+import java.util.Arrays;
 import java.util.Stack;
 
 /**
@@ -13,7 +14,8 @@ import java.util.Stack;
  */
 public class Map {
 
-	public static final boolean threeD = true;
+	public static final boolean threeD = false;
+	public static final boolean surface = true;
 	public static Stack<MyPoint> nodes = new Stack<>();
 	static boolean[][] maze;
 
@@ -30,25 +32,22 @@ public class Map {
 			}
 		}
 	}
-	static int[][] heightMap = new int[10][10];
+	public static final int HILLS = 10;
+	static double[][] heightMap = new double[100][100];
 
 	public static void genMap() {
-		for (int i = 0; i < heightMap.length; i++) {
-			for (int j = 0; j < heightMap[i].length; j++) {
-				heightMap[i][j] = 10;
-			}
-		}
-		makePerlinNoise(0,9,0,9,64);
+		makePerlinNoise(0,heightMap.length-1,0,heightMap[0].length-1,HILLS);
+		System.out.println(Arrays.deepToString(heightMap));
 	}
 
-	public static void makePerlinNoise(int lowX, int maxX, int lowY, int maxY, int distortion) {
+	public static void makePerlinNoise(int lowX, int maxX, int lowY, int maxY, double distortion) {
 
 		int midX = (lowX + maxX) / 2;
 		int midY = (lowY + maxY) / 2;
 if(midX==lowX&&midY==lowY){
 	return;
 }
-		heightMap[midX][midY] = (int) ((Math.random() * distortion + (heightMap[lowX][lowY] + heightMap[lowX][maxY] + heightMap[maxX][lowY] + heightMap[maxX][maxY]) / 4));
+		heightMap[midX][midY] = ((Math.random() * distortion + (heightMap[lowX][lowY] + heightMap[lowX][maxY] + heightMap[maxX][lowY] + heightMap[maxX][maxY]) / 4.0));
 		distortion /= 2;
 		makePerlinNoise(lowX, midX, lowY, midY, distortion);
 	makePerlinNoise(midX, maxX, lowY, midY, distortion);
