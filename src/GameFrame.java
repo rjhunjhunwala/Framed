@@ -137,7 +137,7 @@ public class GameFrame extends JFrame {
 
 				}
 				double dist = someFace.dist();
-				int blue = (int) (255 * ((1 - Math.exp(-dist * 1.5 / renderDist))));
+				int blue = (int) (255 * ((1 - Math.exp(-dist * 1.25 / renderDist))));
 				zBuffGraphics.setColor(new Color(0, 0, blue));
 				zBuffGraphics.fillPolygon(xPoints, yPoints, 4);
 			}
@@ -181,7 +181,7 @@ public class GameFrame extends JFrame {
 
 				}
 				double dist = someFace.dist();
-				double darken = ((1 - Math.exp(-dist * 1.5 / renderDist)));
+				double darken = ((1 - Math.exp(-dist * 1.25 / renderDist)));
 				int blueness = (int) (darken * 260);
 
 				boolean obscured = true;

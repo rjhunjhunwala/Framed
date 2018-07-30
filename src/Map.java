@@ -28,7 +28,7 @@ public class Map {
 	public static final int maxOctaves = 9;
 	public static final int SIZE2 = 1 << maxOctaves;
 	public static final double[][] heightMap2 = new double[SIZE2][SIZE2];
-	public static final int octaves = 6;
+	public static final int octaves = 5;
 
 	public static void makeMaze() {
 		if (threeD) {
@@ -36,7 +36,7 @@ public class Map {
 			Maze.dispWholeMaze();
 		} else {
 
-			maze = new boolean[65][65];
+			maze = new boolean[69][69];
 			nodes.push(new MyPoint(1, 1));
 			while (!nodes.empty()) {
 				findNewNode();
@@ -49,7 +49,7 @@ public class Map {
 	 */
 	private static final int lb2Size = 6;
 	
-		public static final double HILLS = (3<<(lb2Size))*1.2;
+		public static final double HILLS = (3<<(lb2Size))*2.7;
 	/**
 	 * For certain reasons, this must be one greater than a power of two.
 	 */

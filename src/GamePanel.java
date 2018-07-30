@@ -45,7 +45,7 @@ public class GamePanel extends JPanel {
 	static int Y_SIZE = 640;
 	static int X_MID = X_SIZE / 2;
 	static int Y_MID = Y_SIZE / 2;
-	static final int SCALE = 1;
+	static final int SCALE = 2;
 
 	public static final int MAGIC_NUMBER = 0;
 
@@ -188,7 +188,8 @@ public class GamePanel extends JPanel {
 
 	public void paintComponent(Graphics gr) {
 		super.paintComponent(gr);
-
+gr.setColor(new Color(69,200,200));
+gr.fillRect(0, 0, X_SIZE, Y_SIZE);
 		int numValidFaces = 0;
 
 		for (Face f : faces) {
@@ -259,9 +260,9 @@ public class GamePanel extends JPanel {
 
 			}
 			double dist = someFace.dist();
-			int r = (int) (someFace.r * Math.exp(-dist * 2.2 / renderDist));
-			int green = (int) (someFace.g * Math.exp(-dist * 2.2 / renderDist));
-			int bl = (int) (someFace.b * Math.exp(-dist * 2.2 / renderDist));
+			int r = (int) (someFace.r * Math.exp(-dist * 2.0 / renderDist));
+			int green = (int) (someFace.g * Math.exp(-dist * 2.0 / renderDist));
+			int bl = (int) (someFace.b * Math.exp(-dist * 2.0 / renderDist));
 
 			//darken each channel and force it to be above zero
 			gr.setColor(new Color(r, green, bl));

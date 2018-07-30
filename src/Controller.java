@@ -21,7 +21,7 @@ import javafx.scene.shape.Rectangle;
 public class Controller implements KeyListener {
 
 	public static double SPEED = .233;
-
+public static int ANGULAR_VELOCITY_INV = 16; 
 	@Override
 	public void keyTyped(KeyEvent e) {
 //nil
@@ -61,30 +61,30 @@ public class Controller implements KeyListener {
 				break;
 
 			case KeyEvent.VK_Q:
-				Framed.p.viewVector = Trig.rotate(pV, pUP, Math.PI/8);
-				Framed.p.leftVector = Trig.rotate(pLV, pUP, Math.PI/8);
+				Framed.p.viewVector = Trig.rotate(pV, pUP, Math.PI/ANGULAR_VELOCITY_INV);
+				Framed.p.leftVector = Trig.rotate(pLV, pUP, Math.PI/ANGULAR_VELOCITY_INV);
 				break;
 			case KeyEvent.VK_E:
-   				Framed.p.viewVector = Trig.rotate(pV, pUP, -Math.PI/8);
-				Framed.p.leftVector = Trig.rotate(pLV, pUP, -Math.PI/8);
+   				Framed.p.viewVector = Trig.rotate(pV, pUP, -Math.PI/ANGULAR_VELOCITY_INV);
+				Framed.p.leftVector = Trig.rotate(pLV, pUP, -Math.PI/ANGULAR_VELOCITY_INV);
 
 				break;
 			case KeyEvent.VK_Z:
-				   				Framed.p.viewVector = Trig.rotate(pV, pLV, -Math.PI/8);
-				Framed.p.upVector = Trig.rotate(pUP, pLV, -Math.PI/8);
+				   				Framed.p.viewVector = Trig.rotate(pV, pLV, -Math.PI/ANGULAR_VELOCITY_INV);
+				Framed.p.upVector = Trig.rotate(pUP, pLV, -Math.PI/ANGULAR_VELOCITY_INV);
 				break;
 			case KeyEvent.VK_C:
-   				Framed.p.viewVector = Trig.rotate(pV, pLV, Math.PI/8);
-				Framed.p.upVector = Trig.rotate(pUP, pLV, Math.PI/8);
+   				Framed.p.viewVector = Trig.rotate(pV, pLV, Math.PI/ANGULAR_VELOCITY_INV);
+				Framed.p.upVector = Trig.rotate(pUP, pLV, Math.PI/ANGULAR_VELOCITY_INV);
 
 				break;
 			case KeyEvent.VK_T:
-   				Framed.p.upVector = Trig.rotate(pUP, pV, -Math.PI/8);
-				Framed.p.leftVector = Trig.rotate(pLV, pV, -Math.PI/8);
+   				Framed.p.upVector = Trig.rotate(pUP, pV, -Math.PI/ANGULAR_VELOCITY_INV);
+				Framed.p.leftVector = Trig.rotate(pLV, pV, -Math.PI/ANGULAR_VELOCITY_INV);
 				break;
 			case KeyEvent.VK_B:
-		   				Framed.p.upVector = Trig.rotate(pUP, pV, Math.PI/8);
-				Framed.p.leftVector = Trig.rotate(pLV, pV, Math.PI/8);
+		   				Framed.p.upVector = Trig.rotate(pUP, pV, Math.PI/ANGULAR_VELOCITY_INV);
+				Framed.p.leftVector = Trig.rotate(pLV, pV, Math.PI/ANGULAR_VELOCITY_INV);
 				break;
 			case KeyEvent.VK_SPACE:
 				x += pUP[0] * SPEED;
@@ -111,6 +111,12 @@ public class Controller implements KeyListener {
 				break;
 			case KeyEvent.VK_N:
 				SPEED/=2;
+				break;
+							case KeyEvent.VK_M:
+				ANGULAR_VELOCITY_INV*=2;
+				break;
+			case KeyEvent.VK_U:
+				ANGULAR_VELOCITY_INV/=2;
 				break;
 		}
 
