@@ -12,12 +12,6 @@ import static framed.GamePanel.SCALE;
  * @author rohan
  */
 public class Player {
-	//yaw
-	public double yaw = 0;
-	//pitch
-	public double pitch = 0;
-	//roll
-	public double roll = 0;
 	public double[] viewVector = {1,0,0};
 	//our system is right handed.
 	public double[] leftVector = {0,1,0};

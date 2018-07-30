@@ -24,7 +24,7 @@ public class Maze {
 	 * if the size is even the maze will not be nicely contained by walls Also the
 	 * "glade" in the middle will be off center. N
 	 */
-	public static final int size=19;
+	public static final int size=11;
 	//these are the dimensions
 	/**
 	 * The size of the z dimension

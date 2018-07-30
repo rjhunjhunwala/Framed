@@ -8,6 +8,11 @@ package framed;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Arrays;
+import javafx.scene.Scene;
+import javafx.scene.effect.PerspectiveTransform;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 /**
  *
@@ -15,7 +20,7 @@ import java.util.Arrays;
  */
 public class Controller implements KeyListener {
 
-	public static final double SPEED = .25;
+	public static double SPEED = .233;
 
 	@Override
 	public void keyTyped(KeyEvent e) {
@@ -94,12 +99,18 @@ public class Controller implements KeyListener {
 
 			case KeyEvent.VK_R:
 				GamePanel.renderDist++;
-				GamePanel.DARK = 180 / GamePanel.SCALE / GamePanel.renderDist;
+				GamePanel.DARK = 240 / GamePanel.SCALE / GamePanel.renderDist;
 
 				break;
 			case KeyEvent.VK_V:
 				GamePanel.renderDist--;
-				GamePanel.DARK = 180 / GamePanel.SCALE / GamePanel.renderDist;
+				GamePanel.DARK = 240 / GamePanel.SCALE / GamePanel.renderDist;
+				break;
+			case KeyEvent.VK_Y:
+				SPEED*=2;
+				break;
+			case KeyEvent.VK_N:
+				SPEED/=2;
 				break;
 		}
 

@@ -8,13 +8,27 @@ package framed;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Polygon;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.effect.PerspectiveTransform;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.shape.Rectangle;
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 /**
@@ -31,7 +45,10 @@ public class GamePanel extends JPanel {
 	static int Y_SIZE = 640;
 	static int X_MID = X_SIZE / 2;
 	static int Y_MID = Y_SIZE / 2;
-	static final int SCALE = 3;
+	static final int SCALE = 1;
+
+	public static final int MAGIC_NUMBER = 0;
+
 	static ArrayList<FaceMesh> meshes = new ArrayList<>();
 	static ArrayList<Face> faces;
 	public static final int[] magicArray = new int[]{-1, 0, 0, 1, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, -1, 0, 0, 1};
@@ -81,10 +98,47 @@ public class GamePanel extends JPanel {
 
 		} else {
 			if (Map.surface) {
-				faces = new ArrayList<>((Map.heightMap.length - 1) * (Map.heightMap[0].length - 1));
-				for (int i = 0; i < Map.heightMap.length - 1; i++) {
-					for (int j = 0; j < Map.heightMap[0].length - 1; j++) {
-						faces.add(new Face(i, j, Map.heightMap[i][j], i + 1, j, Map.heightMap[i + 1][j], i + 1, j + 1, Map.heightMap[i + 1][j + 1], i, j + 1, Map.heightMap[i][j + 1]));
+				for (int i = 0; i < Map.heightMap.length; i++) {
+					for (int j = 0; j < Map.heightMap.length; j++) {
+						Map.heightMap[i][j] = 0;
+					}
+				}
+
+				if (Map.SPHERE) {
+					Map.heightMap = new double[Map.RESOLUTION + 2][Map.RESOLUTION + 2];
+					for (int i = 0; i < Map.RESOLUTION + 1; i++) {
+						for (int j = 0; j < Map.RESOLUTION + 1; j++) {
+							double x = (i - Map.RESOLUTION / 2.0) * 2 * Map.RADIUS / Map.RESOLUTION;
+							double y = (j - Map.RESOLUTION / 2.0) * 2 * Map.RADIUS / Map.RESOLUTION;
+							//z = +/-Math.sqrt(Radius^2-x^2-y^2) for norm<x,y> <= RADIUS...
+							double discriminant = Map.RADIUS * Map.RADIUS - x * x - y * y;
+							double z = discriminant > 0 ? Math.sqrt(discriminant) : discriminant * discriminant < .01 ? 0 : MAGIC_NUMBER;
+							Map.heightMap[i][j] = z;
+						}
+					}
+					faces = new ArrayList<>((Map.heightMap.length - 1) * (Map.heightMap[0].length - 1));
+					for (int i = 0; i < Map.heightMap.length - 1; i++) {
+						for (int j = 0; j < Map.heightMap[0].length - 1; j++) {
+							double x = (i - Map.RESOLUTION / 2.0) * 2 * Map.RADIUS / Map.RESOLUTION;
+							double y = (j - Map.RESOLUTION / 2.0) * 2 * Map.RADIUS / Map.RESOLUTION;
+
+							if (getSum(Map.heightMap[i][j], Map.heightMap[i][j + 1], Map.heightMap[i + 1][j], Map.heightMap[i + 1][j + 1]) != MAGIC_NUMBER * 4) {
+								LinkedList<ThreeDPoint> pointsUpper = new LinkedList<>();
+
+								faces.add(new Face(x, y, Map.heightMap[i][j], x + 2.0 * Map.RADIUS / Map.RESOLUTION, y, Map.heightMap[i + 1][j], x + 2.0 * Map.RADIUS / Map.RESOLUTION, y + 2.0 * Map.RADIUS / Map.RESOLUTION, Map.heightMap[i + 1][j + 1], x, y + 2.0 * Map.RADIUS / Map.RESOLUTION, Map.heightMap[i][j + 1]));
+								faces.add(new Face(x, y, -Map.heightMap[i][j], x + 2.0 * Map.RADIUS / Map.RESOLUTION, y, -Map.heightMap[i + 1][j], x + 2.0 * Map.RADIUS / Map.RESOLUTION, y + 2.0 * Map.RADIUS / Map.RESOLUTION, -Map.heightMap[i + 1][j + 1], x, y + 2.0 * Map.RADIUS / Map.RESOLUTION, -Map.heightMap[i][j + 1]));
+
+							}
+						}
+					}
+				} else {
+					Map.getPerlinNoiseHeightMap();
+
+					faces = new ArrayList<>((Map.heightMap.length - 1) * (Map.heightMap[0].length - 1));
+					for (int i = 0; i < Map.heightMap.length - 1; i++) {
+						for (int j = 0; j < Map.heightMap[0].length - 1; j++) {
+							faces.add(new Face(i, j, Map.heightMap[i][j], i + 1, j, Map.heightMap[i + 1][j], i + 1, j + 1, Map.heightMap[i + 1][j + 1], i, j + 1, Map.heightMap[i][j + 1]));
+						}
 					}
 				}
 			} else {
@@ -103,8 +157,9 @@ public class GamePanel extends JPanel {
 					}
 				}
 			}
-
-			faces = new ArrayList<>(meshes.size() * 4);
+		}
+		if (Map.threeD || !Map.surface) {
+			faces = new ArrayList<>(meshes.size() * 6);
 
 			for (FaceMesh m : meshes) {
 				for (Face f : m.meshes) {
@@ -114,91 +169,26 @@ public class GamePanel extends JPanel {
 		}
 	}
 
+	public static double getSum(double... group) {
+		double sum = 0;
+		for (double d : group) {
+			sum += d;
+		}
+
+		return sum;
+	}
+
 	@Override
 	public Dimension getPreferredSize() {
 		return new Dimension(X_SIZE, Y_SIZE);
 	}
-	public static int renderDist = Map.surface?Map.HILLS*6:9;
-	public static int DARK = 400 / SCALE / renderDist;
+	public static int renderDist = Map.surface ? Map.SPHERE ? Map.RADIUS * 2 +1 : Map.heightMap.length / 6 : 5;
+	public static int DARK = 240 / SCALE / renderDist;
 	public static final boolean EDGES = false;
 
-	public void paintComponentL(Graphics g) {
-		super.paintComponent(g);
-		int numValidFaces = 0;
-
-		for (Face f : faces) {
-			if (isValidFace(f)) {
-				numValidFaces++;
-			}
-		}
-		ArrayList<Face> validFaces = new ArrayList<>(numValidFaces);
-		//ugly, but blazing fast...
-		for (Face f : faces) {
-			if (isValidFace(f)) {
-				validFaces.add(f);
-			}
-		}
-
-		//	Collections.sort(faces);
-		Collections.sort(validFaces);
-		boxes:
-		for (Face f : validFaces) {
-
-			int[] xPoints = new int[f.vertices.length];
-			int[] yPoints = new int[f.vertices.length];
-			int i = 0;
-			double dist = 0.0;
-			MyPoint newPoint = null;
-			for (ThreeDPoint p : f.vertices) {
-
-				//these determine a "distance vector" of sorts...
-				//Yes, dX is misleading, this isn't a differential, d is a poor appreviation for delta x
-				//or if you prefer dX means "displacement"X
-				double dX = p.getX() - Framed.p.x;
-				double dY = p.getY() - Framed.p.y;
-				double dZ = p.getZ() - Framed.p.z;
-
-				if (dX * dX + dY * dY + dZ * dZ > renderDist * renderDist * SCALE * SCALE) {
-					continue boxes;
-				}
-
-				//lets assume that the view vector is some unit vector turned on a horizontal plane by theta
-				// and pitched vertically by fi
-				//now lets turn the displacement vector by applying linear transformations
-				//don't worry, it's just "linear" algebra....
-				//[dX, dY] *[[cos -theta, sin -theta], [-sin -theta (=sin theta), cos -theta]] = [newDX, newDY]
-				double newdX = dX * Math.cos(Framed.p.yaw) + dY * Math.sin(Framed.p.yaw);
-				double newdY = -dX * Math.sin(Framed.p.yaw) + dY * Math.cos(Framed.p.yaw);
-
-				//[dX,dZ] * [[cos -theta, sin -theta], [-sin -theta (=sin theta), cos -theta]] = [newDX, newDZ]
-				double newNewdX = newdX * Math.cos(Framed.p.pitch) + dZ * Math.sin(Framed.p.pitch);
-				double newdZ = -newdX * Math.sin(Framed.p.pitch) + dZ * Math.cos(Framed.p.pitch);
-
-				if (newNewdX < 0) {
-					continue boxes;
-				}
-				xPoints[i] = (int) (X_SIZE / 2 - (newdY / newNewdX) * X_SIZE / 2);
-				yPoints[i] = (int) (Y_SIZE / 2 - (newdZ / newNewdX) * Y_SIZE / 2);
-				i++;
-
-			}
-
-			int r = (int) (f.r - f.dist() * DARK);
-			int gr = (int) (f.g - f.dist() * DARK);
-			int b = (int) (f.b - f.dist() * DARK);
-
-			//darken each channel and force it to be above zero
-			g.setColor(new Color(r > 0 ? r : 0, gr > 0 ? gr : 0, b > 0 ? b : 0));
-
-			g.fillPolygon(xPoints, yPoints, 4);
-
-		}
-
-	}
-
-	@Override
 	public void paintComponent(Graphics gr) {
 		super.paintComponent(gr);
+
 		int numValidFaces = 0;
 
 		for (Face f : faces) {
@@ -227,7 +217,7 @@ public class GamePanel extends JPanel {
 		double h = Framed.p.upVector[1];
 		double j = Framed.p.upVector[2]; //sorry
 
-		//Yes, crappy naming conventionsm I'm sorry... we're storing the array to avoid the expensive of indexing it
+		//Yes, crappy naming conventions I'm sorry... we're storing the array to avoid the expensive of indexing it
 		//	Collections.sort(faces);
 		Collections.sort(validFaces);
 		boxes:
@@ -236,8 +226,6 @@ public class GamePanel extends JPanel {
 			int[] xPoints = new int[someFace.vertices.length];
 			int[] yPoints = new int[someFace.vertices.length];
 			int i = 0;
-			double dist = 0.0;
-			MyPoint newPoint = null;
 			for (ThreeDPoint p : someFace.vertices) {
 
 				//these determine a "distance vector" of sorts...
@@ -270,22 +258,122 @@ public class GamePanel extends JPanel {
 				i++;
 
 			}
-
-			int r = (int) (someFace.r - someFace.dist() * DARK);
-			int green = (int) (someFace.g - someFace.dist() * DARK);
-			int bl = (int) (someFace.b - someFace.dist() * DARK);
+			double dist = someFace.dist();
+			int r = (int) (someFace.r * Math.exp(-dist * 2.2 / renderDist));
+			int green = (int) (someFace.g * Math.exp(-dist * 2.2 / renderDist));
+			int bl = (int) (someFace.b * Math.exp(-dist * 2.2 / renderDist));
 
 			//darken each channel and force it to be above zero
-			gr.setColor(new Color(r > 0 ? r : 0, green > 0 ? green : 0, bl > 0 ? bl : 0));
+			gr.setColor(new Color(r, green, bl));
 
-			gr.fillPolygon(xPoints, yPoints, 4);
+			gr.fillPolygon(xPoints, yPoints, xPoints.length);
 
 		}
+	}
 
+	public static BufferedImage TEXTURE;
+
+	static {
+		try {
+			TEXTURE = ImageIO.read(new File("cobble2.png"));
+
+		} catch (IOException ex) {
+			Logger.getLogger(GamePanel.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+
+	public static Image IMAGE = SwingFXUtils.toFXImage(TEXTURE, null);
+	public static final int TEXTURE_SIZE = (int) IMAGE.getWidth();
+
+	public void paintComponentL(Graphics gr) {
+		super.paintComponent(gr);
+
+		int numValidFaces = 0;
+
+		for (Face f : faces) {
+			if (isValidFace(f)) {
+				numValidFaces++;
+			}
+		}
+		ArrayList<Face> validFaces = new ArrayList<>(numValidFaces);
+		//ugly, but blazing fast...
+		for (Face f : faces) {
+			if (isValidFace(f)) {
+				validFaces.add(f);
+			}
+		}
+
+		//if it looks stupid and it works... it's not stupid
+		double a = Framed.p.viewVector[0];
+		double b = Framed.p.viewVector[1];
+		double c = Framed.p.viewVector[2];
+
+		double d = Framed.p.leftVector[0];
+		double e = Framed.p.leftVector[1];
+		double f = Framed.p.leftVector[2];
+
+		double g = Framed.p.upVector[0];
+		double h = Framed.p.upVector[1];
+		double j = Framed.p.upVector[2]; //sorry
+
+		//Yes, crappy naming conventions I'm sorry... we're storing the array to avoid the expensive of indexing it
+		//	Collections.sort(faces);
+		Collections.sort(validFaces);
+		boxes:
+		for (Face someFace : validFaces) {
+
+			int[] xPoints = new int[someFace.vertices.length];
+			int[] yPoints = new int[someFace.vertices.length];
+			int i = 0;
+			for (ThreeDPoint p : someFace.vertices) {
+
+				//these determine a "distance vector" of sorts...
+				//Yes, dX is misleading, this isn't a differential, d is a poor appreviation for delta x
+				//or if you prefer dX means "displacement"X
+				double dX = p.getX() - Framed.p.x;
+				double dY = p.getY() - Framed.p.y;
+				double dZ = p.getZ() - Framed.p.z;
+
+				//all right, the following magic math deserves some explanation...
+				//the matrix formed by using the three "basis vectors" coming out of our camera, as column vectors actually describes 
+				//an orthagonal rotational matrix
+				//i.e this abomination, describes the rotation of the camera...
+				//|viewVector[0], leftVector[0], upVector[0]|
+				//|vV[1]        , lV[1]        , upV[1]     |   =R
+				//|vV[2}        , lV[2]        , upV[2]     |
+				//to find the inverse, we just need R^T, we transpose the matrix so it's as follows
+				// vV[0],vV[1]... etc.... = R^T = R^-1
+				//now, R^-1 * displacement Vector = Transformed position
+				double newdX = a * dX + b * dY + c * dZ;
+				double newdY = d * dX + e * dY + f * dZ;
+				double newdZ = g * dX + h * dY + j * dZ;
+
+				if (newdX < 0) {
+					continue boxes;
+				}
+
+				xPoints[i] = (int) (X_SIZE / 2 - (newdY / newdX) * X_SIZE / 2);
+				yPoints[i] = (int) (Y_SIZE / 2 - (newdZ / newdX) * Y_SIZE / 2);
+				i++;
+
+			}
+			double dist = someFace.dist();
+			int darken = (int) (255 * (1 - Math.exp(-dist * 1.5 / renderDist)));
+			Point2D p0 = new Point2D.Double(xPoints[0], yPoints[0]);
+			Point2D p1 = new Point2D.Double(xPoints[1], yPoints[1]);
+			Point2D p2 = new Point2D.Double(xPoints[2], yPoints[2]);
+			Point2D p3 = new Point2D.Double(xPoints[3], yPoints[3]);
+			BufferedImage newImage = null;//todo figure this out. 
+			gr.drawImage(newImage, 0, 0, X_SIZE, Y_SIZE, null);
+			gr.setColor(new Color(0, 0, 0, darken));
+			gr.fillPolygon(xPoints, yPoints, xPoints.length);
+
+		}
 	}
 
 	public static boolean isValidFace(Face f) {
-		double dotProd = Framed.p.viewVector[0] * (f.vertices[0].x - Framed.p.x) + Framed.p.viewVector[1] * (f.vertices[0].y - Framed.p.y) + Framed.p.viewVector[2] * (f.vertices[0].z - Framed.p.z);
+		double[] averageVector = f.getAverage();
+		double dotProd = Framed.p.viewVector[0] * (averageVector[0] - Framed.p.x) + Framed.p.viewVector[1] * (averageVector[1] - Framed.p.y) + Framed.p.viewVector[2] * (averageVector[2] - Framed.p.z);
 		return f.dist() < renderDist * SCALE && (dotProd > 0);
 	}
 

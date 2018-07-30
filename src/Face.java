@@ -93,10 +93,11 @@ switch(orientation){
 	return (int) (1000000*((((Face) o).dist())-this.dist()));
 
 		}
-public double dist(){
-	double averageX = 0;
+public double[] getAverage(){
+		double averageX = 0;
 	double averageY = 0;
 	double averageZ = 0;
+
 	for(ThreeDPoint p:vertices){
 		averageX+=p.x;
 		averageY+=p.y;
@@ -105,9 +106,14 @@ public double dist(){
 	averageX/=vertices.length;
 	averageY/=vertices.length;
 	averageZ/=vertices.length;
-	double dX = averageX-Framed.p.x;
-	double dY = averageY-Framed.p.y;
-		double dZ = averageZ-Framed.p.z;
+	return new double[]{averageX,averageY,averageZ};
+}
+
+	public double dist(){
+double[] average = getAverage();
+	double dX = average[0]-Framed.p.x;
+	double dY = average[1]-Framed.p.y;
+		double dZ = average[2]-Framed.p.z;
 	return Math.sqrt(dX*dX+dY*dY+dZ*dZ);
 }
 

@@ -16,7 +16,7 @@ public class Compare implements Comparator{
 
 	@Override
 	public int compare(Object o1, Object o2) {
-return (int) (10*(((Face) o1).dist()-((Face) o2).dist()));
+return (int) (1000000*(((Face) o1).dist()-((Face) o2).dist()));
 	}
 	
 }

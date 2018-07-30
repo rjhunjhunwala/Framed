@@ -5,7 +5,14 @@
  */
 package framed;
 
+
 import java.util.Arrays;
+import javafx.scene.Scene;
+import javafx.scene.effect.PerspectiveTransform;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -13,25 +20,33 @@ import java.util.Arrays;
  */
 public class Framed {
 	public static final Player p = new Player();
-static GameFrame mainFrame = new GameFrame();
+static GameFrame mainFrame;
 	/**
 	 * @param args the command line arguments
 	 */
-	public static void main(String[] args) {
-		Map.genMap();
-//for(int[] i:Map.heightMap){
-	//System.out.println(Arrays.toString(i));
-//}
-			//p.zXAngle = Math.PI/192;
-			//p.	yXAngle = Math.PI/4+Math.PI/192;
-				//System.out.println(Arrays.toString(Framed.p.viewVector));
+	public static void main(String[] args) throws Exception{
+SwingUtilities.invokeLater(new Runnable(){
+	@Override
+	public void run(){
+		mainFrame = new GameFrame();
+	}
+});
 if(Map.surface){
-	Framed.p.x = Map.heightMap.length/2;
-	Framed.p.y = Map.heightMap[0].length/2;
-	//Framed.p.z = Map.HILLS + 1;
+	if(Map.SPHERE){
+		Framed.p.x = .0;
+		Framed.p.y = 0;
+		Framed.p.z = .01;
+	}else{
+		Framed.p.x = Map.heightMap.length/2;
+		Framed.p.y = Map.heightMap[0].length/2;
+		Framed.p.z = 0;
+	}
 }
 
+//new Thread(new ReRenderThread()).start();
+Thread.sleep(1000);
 				for(;;){
+
 
 	mainFrame.repaint();
 }
