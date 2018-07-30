@@ -15,11 +15,14 @@ import java.util.LinkedList;
  * @author rohan
  */
 public class Face implements Comparable{
-
+public static final boolean RANDOM = true;
+public static final int HARD_CODED_R = 255;
+public static final int HARD_CODED_G = 255;
+public static final int HARD_CODED_B = 255;
 ThreeDPoint[] vertices;
-int r = 0;
-int g = 255;
-int b = 0;
+int r = RANDOM?(int) (Math.random()*256):HARD_CODED_R;
+int g = RANDOM?(int) (Math.random()*256):HARD_CODED_G;
+int b = RANDOM?(int) (Math.random()*256):HARD_CODED_B;
 	
 public Face(LinkedList<ThreeDPoint> list) {
 		vertices = new ThreeDPoint[list.size()];
@@ -33,15 +36,19 @@ public Face(double...inputs){
 		vertices[i/3] = new ThreeDPoint(inputs[i],inputs[i+1],inputs[i+2]);
 	}
 }
+public Face(Color inColor,double...inputs){
+this(inputs);
+r = inColor.getRed();
+g = inColor.getGreen();
+b = inColor.getBlue();
+}
 public Face(LinkedList<ThreeDPoint> list, int r, int g, int b){
 		this(list);
 		this.r = r;
 		this.g = g;
 		this.b = b;
 	}
-	public static Face getSquareFace(double x, double y, double z, int orientation){
-	return Face.getSquareFace( x, y,  z, orientation,Color.green);
-}
+
 	/**
 		* Gets a square face originate at a given coordinate
 		* @param x
@@ -51,7 +58,7 @@ public Face(LinkedList<ThreeDPoint> list, int r, int g, int b){
 	 * @param inColor
 		* @return 
 		*/
-	public static Face getSquareFace(double x,double y,double z, int orientation, Color inColor){
+	public static Face getSquareFace(double x,double y,double z, int orientation){
 		LinkedList<ThreeDPoint> list = new LinkedList<>();
 		list.add(new ThreeDPoint(x,y,z));
 switch(orientation){
@@ -84,7 +91,7 @@ switch(orientation){
 	case 2:
 					list.add(new ThreeDPoint(x,y,z+1));
 }
-		return new Face(list,inColor.getRed(),inColor.getGreen(),inColor.getBlue());
+		return new Face(list);
 	}
 
 	@Override

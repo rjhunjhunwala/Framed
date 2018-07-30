@@ -37,8 +37,11 @@ import javax.swing.JPanel;
  */
 public class GamePanel extends JPanel {
 
+	public static final Color SKY_BLUE = new Color(69, 200, 200);
+	public static final Color BACKGROUND = Color.white;
+
 	public GamePanel() {
-		this.setBackground(Color.black);
+		this.setBackground(BACKGROUND);
 	}
 
 	static int X_SIZE = 640;
@@ -124,9 +127,42 @@ public class GamePanel extends JPanel {
 
 							if (getSum(Map.heightMap[i][j], Map.heightMap[i][j + 1], Map.heightMap[i + 1][j], Map.heightMap[i + 1][j + 1]) != MAGIC_NUMBER * 4) {
 								LinkedList<ThreeDPoint> pointsUpper = new LinkedList<>();
-
-								faces.add(new Face(x, y, Map.heightMap[i][j], x + 2.0 * Map.RADIUS / Map.RESOLUTION, y, Map.heightMap[i + 1][j], x + 2.0 * Map.RADIUS / Map.RESOLUTION, y + 2.0 * Map.RADIUS / Map.RESOLUTION, Map.heightMap[i + 1][j + 1], x, y + 2.0 * Map.RADIUS / Map.RESOLUTION, Map.heightMap[i][j + 1]));
-								faces.add(new Face(x, y, -Map.heightMap[i][j], x + 2.0 * Map.RADIUS / Map.RESOLUTION, y, -Map.heightMap[i + 1][j], x + 2.0 * Map.RADIUS / Map.RESOLUTION, y + 2.0 * Map.RADIUS / Map.RESOLUTION, -Map.heightMap[i + 1][j + 1], x, y + 2.0 * Map.RADIUS / Map.RESOLUTION, -Map.heightMap[i][j + 1]));
+								int r = 0;
+								int g = 0;
+								int b = 0;
+								double pct = Map.heightMap[i][j] / Map.RADIUS;
+								double prog = (pct % (1 / 6.0))*6;
+								
+								switch ((int) (6.0 * pct)) {
+									case 0:
+										r = 255;
+										g = (int) (255 * prog);
+										break;
+									case 1:
+										g = 255;
+										r = (int) (255 * (1 - prog));
+										break;
+									case 2:
+										g = 255;
+										b =  (int) (255 * prog);
+										break;
+									case 3:
+										b = 255;
+										g = (int) (255 * (1 - prog));
+										break;
+									case 4:  
+										b = 255;
+										r = (int) (255 * prog);
+										break;
+									case 5:										
+										r = 255;
+										b = (int) (255 * (1 - prog));
+										
+								}
+			
+								Color thisColor = new Color(r, g, b);
+								faces.add(new Face(thisColor, x, y, Map.heightMap[i][j], x + 2.0 * Map.RADIUS / Map.RESOLUTION, y, Map.heightMap[i + 1][j], x + 2.0 * Map.RADIUS / Map.RESOLUTION, y + 2.0 * Map.RADIUS / Map.RESOLUTION, Map.heightMap[i + 1][j + 1], x, y + 2.0 * Map.RADIUS / Map.RESOLUTION, Map.heightMap[i][j + 1]));
+								faces.add(new Face(thisColor, x, y, -Map.heightMap[i][j], x + 2.0 * Map.RADIUS / Map.RESOLUTION, y, -Map.heightMap[i + 1][j], x + 2.0 * Map.RADIUS / Map.RESOLUTION, y + 2.0 * Map.RADIUS / Map.RESOLUTION, -Map.heightMap[i + 1][j + 1], x, y + 2.0 * Map.RADIUS / Map.RESOLUTION, -Map.heightMap[i][j + 1]));
 
 							}
 						}
@@ -137,7 +173,9 @@ public class GamePanel extends JPanel {
 					faces = new ArrayList<>((Map.heightMap.length - 1) * (Map.heightMap[0].length - 1));
 					for (int i = 0; i < Map.heightMap.length - 1; i++) {
 						for (int j = 0; j < Map.heightMap[0].length - 1; j++) {
-							faces.add(new Face(i, j, Map.heightMap[i][j], i + 1, j, Map.heightMap[i + 1][j], i + 1, j + 1, Map.heightMap[i + 1][j + 1], i, j + 1, Map.heightMap[i][j + 1]));
+
+							Color thisColor = Map.heightMap[i][j] >= Map.HILLS / 24 ? new Color(255, 255, 255) : Map.heightMap[i][j] > -Map.HILLS / 24 ? Color.GREEN : (new Color(0, 144, 255));
+							faces.add(new Face(thisColor, i, j, Map.heightMap[i][j], i + 1, j, Map.heightMap[i + 1][j], i + 1, j + 1, Map.heightMap[i + 1][j + 1], i, j + 1, Map.heightMap[i][j + 1]));
 						}
 					}
 				}
@@ -182,14 +220,14 @@ public class GamePanel extends JPanel {
 	public Dimension getPreferredSize() {
 		return new Dimension(X_SIZE, Y_SIZE);
 	}
-	public static int renderDist = Map.surface ? Map.SPHERE ? Map.RADIUS * 2 +1 : Map.heightMap.length / 6 : 5;
+	public static int renderDist = Map.surface ? Map.SPHERE ? Map.RADIUS * 2 + 1 : Map.heightMap.length / 6 : 5;
 	public static int DARK = 240 / SCALE / renderDist;
 	public static final boolean EDGES = false;
 
 	public void paintComponent(Graphics gr) {
 		super.paintComponent(gr);
-gr.setColor(new Color(69,200,200));
-gr.fillRect(0, 0, X_SIZE, Y_SIZE);
+		gr.setColor(BACKGROUND);
+		gr.fillRect(0, 0, X_SIZE, Y_SIZE);
 		int numValidFaces = 0;
 
 		for (Face f : faces) {
@@ -260,9 +298,9 @@ gr.fillRect(0, 0, X_SIZE, Y_SIZE);
 
 			}
 			double dist = someFace.dist();
-			int r = (int) (someFace.r * Math.exp(-dist * 2.0 / renderDist));
-			int green = (int) (someFace.g * Math.exp(-dist * 2.0 / renderDist));
-			int bl = (int) (someFace.b * Math.exp(-dist * 2.0 / renderDist));
+			int r = (int) (someFace.r * Math.exp(-dist * 1 / (renderDist)));
+			int green = (int) (someFace.g * Math.exp(-dist * 1 / (renderDist)));
+			int bl = (int) (someFace.b * Math.exp(-dist * 1 / (renderDist)));
 
 			//darken each channel and force it to be above zero
 			gr.setColor(new Color(r, green, bl));
